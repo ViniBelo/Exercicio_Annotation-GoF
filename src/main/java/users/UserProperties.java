@@ -1,10 +1,12 @@
 package users;
 
-import factories.UserFactory;
+import domain.User;
+import factories.users.UserFactory;
 import permissions.Permissions;
 import roles.Role;
 
 public class UserProperties {
+
     private Role role;
     private Permissions permissions;
 
@@ -13,9 +15,8 @@ public class UserProperties {
         permissions = factory.definePermission();
     }
 
-    public void create() {
-        role.define();
-        permissions.define();
+    public User create(String name) {
+        return new User(name, role.define(), permissions.define());
     }
 
     public Role getRole() {

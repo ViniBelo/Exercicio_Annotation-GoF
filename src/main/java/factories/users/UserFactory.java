@@ -1,4 +1,4 @@
-package factories;
+package factories.users;
 
 import permissions.Permissions;
 import roles.Role;

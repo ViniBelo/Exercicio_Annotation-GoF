@@ -1,20 +1,37 @@
-import factories.AdminFactory;
-import factories.CommonFactory;
-import factories.UserFactory;
+import dao.UserDaoImpl;
+import factories.daos.DaoFactoryProvider;
+import factories.users.AdminFactory;
+import factories.users.CommonFactory;
+import factories.users.UserFactory;
+import proxies.Proxy;
 import users.UserProperties;
+import utils.FactoryTypes;
+
+import java.util.Scanner;
 
 public class Demo {
     public static UserProperties configureUser() {
         UserProperties userProperties;
         UserFactory factory;
 
-        factory = new CommonFactory();
+        var scanner = new Scanner(System.in);
+
+        if (scanner.nextLine().equalsIgnoreCase("admin")) {
+            factory = new AdminFactory();
+        } else {
+            factory = new CommonFactory();
+        }
         userProperties = new UserProperties(factory);
         return userProperties;
     }
 
     public static void main(String[] args) {
         UserProperties userProperties = configureUser();
-        userProperties.create();
+        var proxy = DaoFactoryProvider.getDaoFactory(FactoryTypes.DYNAMIC);
+        try {
+            System.out.println(proxy.getDao().save(userProperties.create("Matheus")));
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
