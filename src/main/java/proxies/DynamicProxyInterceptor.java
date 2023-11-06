@@ -2,6 +2,7 @@ package proxies;
 
 import annotations.Transaction;
 import dao.UserDao;
+import domain.User;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -15,7 +16,8 @@ public class DynamicProxyInterceptor implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.isAnnotationPresent(Transaction.class)) {
+        Method daoImplMethod = dao.getClass().getMethod("save", User.class);
+        if (daoImplMethod.isAnnotationPresent(Transaction.class)) {
             try {
                 System.out.println("Iniciando execução do método " +
                         method.getName() +
@@ -26,14 +28,14 @@ public class DynamicProxyInterceptor implements InvocationHandler {
                         method.getName() +
                         "." +
                         method.getDeclaringClass().getName() +
-                        "com sucesso");
+                        " com sucesso");
                 return savedUser;
             } catch (Exception e) {
                 System.out.println("Finalizando execução do método " +
                         method.getName() +
                         "." +
                         method.getDeclaringClass().getName() +
-                        "com erro");
+                        " com erro");
             }
         }
         return method.invoke(dao, args);

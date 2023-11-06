@@ -28,10 +28,6 @@ public class Demo {
     public static void main(String[] args) {
         UserProperties userProperties = configureUser();
         var proxy = DaoFactoryProvider.getDaoFactory(FactoryTypes.DYNAMIC);
-        try {
-            System.out.println(proxy.getDao().save(userProperties.create("Matheus")));
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println(proxy.getDao().save(userProperties.create("Matheus")));
     }
 }
