@@ -13,36 +13,35 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DynamicProxyInterceptorTest {
-
-    static UserDao dao;
-
-    static InvocationHandler handler;
-
     proxies.Proxy proxy;
 
-    @BeforeAll
-    static void beforeAll() {
-        dao = new UserDaoStub();
+    @Test
+    void shouldSaveAUserViaDynamicProxy() throws NoSuchMethodException {
+        // given
         UserDao dao = new UserDaoImpl();
-        handler = new DynamicProxyInterceptor(dao);
+        InvocationHandler handler = new DynamicProxyInterceptor(dao);
+        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
+        proxy = new proxies.Proxy((UserDao) Proxy.newProxyInstance(dao.getClass().getClassLoader(), new Class[]{UserDao.class}, handler));
+
+        // when
+        User savedUser = proxy.save(user);
+
+        // then
+        assertEquals(savedUser, user);
     }
 
     @Test
-    void invoke() throws NoSuchMethodException {
+    void shouldDetectTransactionAnnotationAtSaveMethod() throws NoSuchMethodException {
         // given
-        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
-        proxy = new proxies.Proxy((UserDao) Proxy.newProxyInstance(dao.getClass().getClassLoader(), new Class[]{UserDao.class}, handler));
+        UserDao dao = new UserDaoImpl();
         Method method = dao.getClass().getMethod("save", User.class);
 
-        // then
-        User savedUser = proxy.save(user);
+        // when
 
-        // assert
-        assertEquals(savedUser, user);
+        // then
         assertTrue(method.isAnnotationPresent(Transaction.class));
     }
 }

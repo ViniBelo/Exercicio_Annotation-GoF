@@ -16,27 +16,31 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProxyTest {
 
-    static UserDao dao;
-
     Proxy proxy;
 
-    @BeforeAll
-    static void beforeAll() {
-        dao = new UserDaoStub();
+    @Test
+    void shouldSaveAUserViaPatternProxy() {
+        // given
+        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
+        UserDao dao = new UserDaoImpl();
+        proxy = new Proxy(dao);
+
+        // when
+        User savedUser = proxy.save(user);
+
+        // then
+        assertEquals(savedUser, user);
     }
 
     @Test
-    void save() throws NoSuchMethodException {
+    void shouldDetectTransactionAnnotationAtSaveMethod() throws NoSuchMethodException {
         // given
-        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
+        UserDao dao = new UserDaoImpl();
         Method method = dao.getClass().getMethod("save", User.class);
-        proxy = new Proxy(dao);
+
+        // when
 
         // then
-        User savedUser = proxy.save(user);
-
-        // assert
-        assertEquals(savedUser, user);
         assertTrue(method.isAnnotationPresent(Transaction.class));
     }
 }

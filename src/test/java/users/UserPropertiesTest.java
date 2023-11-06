@@ -2,6 +2,7 @@ package users;
 
 import domain.User;
 import factories.users.AdminFactory;
+import factories.users.CommonFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import utils.UserPermissions;
@@ -14,92 +15,92 @@ class UserPropertiesTest {
     UserProperties properties;
 
     @Test
-    void createUsingAllAdministratorInformation() {
+    void mustCreateAAdminUserUsingAdminFactory() {
         // given
         User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
-        properties = new UserProperties(new AdminFactoryStub());
+        properties = new UserProperties(new AdminFactory());
 
-        // then
+        // when
         User savedUser = properties.create("Teste");
 
-        // assert
+        // then
         assertEquals(savedUser.getRole(), user.getRole());
         assertEquals(savedUser.getPermissions(), user.getPermissions());
         assertEquals(savedUser.getName(), user.getName());
     }
 
     @Test
-    void createUsingAllCommonInformation() {
+    void mustCreateACommonUserUsingCommonFactory() {
         // given
         User user = new User("Teste", UserRoles.COMMON, UserPermissions.BASIC);
-        properties = new UserProperties(new CommonFactoryStub());
+        properties = new UserProperties(new CommonFactory());
 
-        // then
+        // when
         User savedUser = properties.create("Teste");
 
-        // assert
+        // then
         assertEquals(savedUser.getRole(), user.getRole());
         assertEquals(savedUser.getPermissions(), user.getPermissions());
         assertEquals(savedUser.getName(), user.getName());
     }
 
     @Test
-    void createUsingAdministratorRoleAndBasicPermissionsWithAdminFactory() {
+    void shouldHaveDifferentRolesUsingAdministratorRoleAndBasicPermissionsWithCommonFactory() {
         // given
         User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.BASIC);
-        properties = new UserProperties(new AdminFactoryStub());
+        properties = new UserProperties(new CommonFactory());
 
-        // then
+        // when
         User savedUser = properties.create("Teste");
 
-        // assert
+        // then
+        assertNotEquals(savedUser.getRole(), user.getRole());
+        assertEquals(savedUser.getPermissions(), user.getPermissions());
+        assertEquals(savedUser.getName(), user.getName());
+    }
+
+    @Test
+    void shouldHaveDifferentRolesUsingCommonRoleAndModerationPermissionsWithAdminFactory() {
+        // given
+        User user = new User("Teste", UserRoles.COMMON, UserPermissions.MODERATION);
+        properties = new UserProperties(new AdminFactory());
+
+        // when
+        User savedUser = properties.create("Teste");
+
+        // then
+        assertNotEquals(savedUser.getRole(), user.getRole());
+        assertEquals(savedUser.getPermissions(), user.getPermissions());
+        assertEquals(savedUser.getName(), user.getName());
+    }
+
+    @Test
+    void shouldHaveDifferentPermissionsUsingAdministratorRoleAndBasicPermissionsWithAdminFactory() {
+        // given
+        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.BASIC);
+        properties = new UserProperties(new AdminFactory());
+
+        // when
+        User savedUser = properties.create("Teste");
+
+        // then
         assertEquals(savedUser.getRole(), user.getRole());
         assertNotEquals(savedUser.getPermissions(), user.getPermissions());
         assertEquals(savedUser.getName(), user.getName());
     }
 
     @Test
-    void createUsingAdministratorRoleAndBasicPermissionsWithCommonFactory() {
-        // given
-        User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.BASIC);
-        properties = new UserProperties(new CommonFactoryStub());
-
-        // then
-        User savedUser = properties.create("Teste");
-
-        // assert
-        assertNotEquals(savedUser.getRole(), user.getRole());
-        assertEquals(savedUser.getPermissions(), user.getPermissions());
-        assertEquals(savedUser.getName(), user.getName());
-    }
-
-    @Test
-    void createUsingCommonRoleAndModerationPermissionsWithAdminFactory() {
+    void shouldHaveDifferentPermissionsUsingCommonRoleAndModerationPermissionsWithCommonFactory() {
         // given
         User user = new User("Teste", UserRoles.COMMON, UserPermissions.MODERATION);
-        properties = new UserProperties(new AdminFactoryStub());
+        properties = new UserProperties(new CommonFactory());
 
-        // then
+        // when
         User savedUser = properties.create("Teste");
 
-        // assert
-        assertNotEquals(savedUser.getRole(), user.getRole());
-        assertEquals(savedUser.getPermissions(), user.getPermissions());
-        assertEquals(savedUser.getName(), user.getName());
-    }
-
-    @Test
-    void createUsingCommonRoleAndModerationPermissionsWithCommonFactory() {
-        // given
-        User user = new User("Teste", UserRoles.COMMON, UserPermissions.MODERATION);
-        properties = new UserProperties(new AdminFactoryStub());
-
         // then
-        User savedUser = properties.create("Teste");
-
-        // assert
-        assertNotEquals(savedUser.getRole(), user.getRole());
-        assertEquals(savedUser.getPermissions(), user.getPermissions());
+        assertEquals(savedUser.getRole(), user.getRole());
+        assertNotEquals(savedUser.getPermissions(), user.getPermissions());
         assertEquals(savedUser.getName(), user.getName());
     }
 }
