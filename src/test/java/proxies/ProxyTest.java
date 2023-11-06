@@ -1,5 +1,6 @@
 package proxies;
 
+import annotations.Transaction;
 import dao.UserDao;
 import dao.UserDaoImpl;
 import domain.User;
@@ -8,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import utils.UserPermissions;
 import utils.UserRoles;
 
+import java.lang.reflect.Method;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProxyTest {
 
@@ -22,9 +26,10 @@ class ProxyTest {
     }
 
     @Test
-    void save() {
+    void save() throws NoSuchMethodException {
         // given
         User user = new User("Teste", UserRoles.ADMINISTRATOR, UserPermissions.MODERATION);
+        Method method = dao.getClass().getMethod("save", User.class);
         proxy = new Proxy(dao);
 
         // then
@@ -32,5 +37,6 @@ class ProxyTest {
 
         // assert
         assertEquals(savedUser, user);
+        assertTrue(method.isAnnotationPresent(Transaction.class));
     }
 }
