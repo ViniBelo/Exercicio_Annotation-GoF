@@ -1,9 +1,7 @@
-import dao.UserDaoImpl;
 import factories.daos.DaoFactoryProvider;
 import factories.users.AdminFactory;
 import factories.users.CommonFactory;
 import factories.users.UserFactory;
-import proxies.Proxy;
 import users.UserProperties;
 import utils.FactoryTypes;
 

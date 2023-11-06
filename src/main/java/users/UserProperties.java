@@ -7,8 +7,8 @@ import roles.Role;
 
 public class UserProperties {
 
-    private Role role;
-    private Permissions permissions;
+    private final Role role;
+    private final Permissions permissions;
 
     public UserProperties(UserFactory factory) {
         role = factory.defineRole();
@@ -17,13 +17,5 @@ public class UserProperties {
 
     public User create(String name) {
         return new User(name, role.define(), permissions.define());
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public Permissions getPermissions() {
-        return permissions;
     }
 }
