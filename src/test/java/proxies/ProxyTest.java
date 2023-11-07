@@ -4,15 +4,13 @@ import annotations.Transaction;
 import dao.UserDao;
 import dao.UserDaoImpl;
 import domain.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import utils.UserPermissions;
 import utils.UserRoles;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProxyTest {
 
@@ -30,6 +28,18 @@ class ProxyTest {
 
         // then
         assertEquals(savedUser, user);
+    }
+
+    @Test
+    void shouldThrowANullPointerExceptionWhenTryingToSaveNull() {
+        // given
+        UserDao dao = new UserDaoImpl();
+        proxy = new Proxy(dao);
+
+        // when
+
+        // then
+        assertThrows(NullPointerException.class, () -> proxy.save(null));
     }
 
     @Test

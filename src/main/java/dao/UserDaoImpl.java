@@ -7,7 +7,12 @@ public class UserDaoImpl implements UserDao{
     @Override
     @Transaction
     public User save(User user) {
-        System.out.println("Saving user.");
+        if (!user.equals(null)) {
+            System.out.println("Saving user.");
+        } else {
+            System.err.println("Null value!");
+            throw new NullPointerException();
+        }
         return user;
     }
 }

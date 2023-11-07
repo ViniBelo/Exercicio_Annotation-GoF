@@ -31,15 +31,16 @@ public class Proxy implements UserDao {
                             " com sucesso");
                     return savedUser;
                 } catch (Exception e) {
-                    System.out.println("Finalizando execução do método " +
+                    System.err.println("Finalizando execução do método " +
                             method.getName() +
                             "." +
                             method.getDeclaringClass().getName() +
                             " com erro");
+                    System.out.println("Rolling back transaction...");
                 }
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            System.err.println("Método não encontrado!");
         }
         return dao.save(user);
     }

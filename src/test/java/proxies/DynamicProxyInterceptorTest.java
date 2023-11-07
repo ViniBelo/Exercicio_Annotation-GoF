@@ -34,6 +34,18 @@ class DynamicProxyInterceptorTest {
     }
 
     @Test
+    void shouldThrowANullPointerExceptionWhenTryingToSaveNull() {
+        // given
+        UserDao dao = new UserDaoImpl();
+        proxy = new proxies.Proxy(dao);
+
+        // when
+
+        // then
+        assertThrows(NullPointerException.class, () -> proxy.save(null));
+    }
+
+    @Test
     void shouldDetectTransactionAnnotationAtSaveMethod() throws NoSuchMethodException {
         // given
         UserDao dao = new UserDaoImpl();

@@ -31,11 +31,12 @@ public class DynamicProxyInterceptor implements InvocationHandler {
                         " com sucesso");
                 return savedUser;
             } catch (Exception e) {
-                System.out.println("Finalizando execução do método " +
+                System.err.println("Finalizando execução do método " +
                         method.getName() +
                         "." +
                         method.getDeclaringClass().getName() +
                         " com erro");
+                System.out.println("Rolling back transaction...");
             }
         }
         return method.invoke(dao, args);
